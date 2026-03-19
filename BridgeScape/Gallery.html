@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BridgeScape — Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0a1929;
+      --deep:      #081320;
+      --blue:      #1a4a8a;
+      --teal:      #0d9488;
+      --teal-lt:   #14b8a6;
+      --sky:       #38bdf8;
+      --aqua:      #67e8f9;
+      --white:     #ffffff;
+      --muted:     #94a3b8;
+      --glass:     rgba(255,255,255,0.055);
+      --glass-bdr: rgba(255,255,255,0.13);
+      --ease:      cubic-bezier(.22,.61,.36,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--deep);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    #cdot, #cring {
+      position: fixed; border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+    }
+    #cdot {
+      width: 8px; height: 8px;
+      background: var(--aqua);
+      box-shadow: 0 0 14px var(--aqua);
+      transform: translate(-50%,-50%);
+      transition: transform .15s;
+    }
+    #cring {
+      width: 38px; height: 38px;
+      border: 1.5px solid rgba(103,232,249,.42);
+      transform: translate(-50%,-50%);
+      transition: width .22s, height .22s, border-color .22s, background .22s;
+    }
+    body.hov #cring {
+      width: 60px; height: 60px;
+      border-color: var(--teal);
+      background: rgba(13,148,136,.08);
+    }
+    body.clk #cdot { transform: translate(-50%,-50%) scale(1.8); }
+
+    .bg { position: fixed; inset: 0; z-index: 0; background: #08192f; overflow: hidden; }
+    .bg::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 85% 55% at 15% 5%,  rgba(26,74,138,.55)  0%, transparent 55%),
+        radial-gradient(ellipse 55% 75% at 88% 90%, rgba(13,148,136,.28) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 60% 45%, rgba(56,189,248,.05) 0%, transparent 60%);
+    }
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .14; animation: orbf 15s ease-in-out infinite alternate; }
+    .o1  { width:500px; height:500px; background:#1a4a8a; top:-110px; left:-120px; animation-duration:17s; }
+    .o2  { width:360px; height:360px; background:#0d9488; bottom:-80px; right:-90px; animation-duration:13s; animation-delay:3s; }
+    .o3  { width:220px; height:220px; background:#38bdf8; top:40%; left:68%; animation-duration:11s; animation-delay:6s; opacity:.09; }
+    @keyframes orbf { from{transform:translate(0,0) scale(1)} to{transform:translate(40px,55px) scale(1.12)} }
+    .grid-ov {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(56,189,248,.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(56,189,248,.03) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index: 200;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 6%;
+      background: rgba(8,19,32,.82);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--glass-bdr);
+      transition: box-shadow .4s;
+      animation: navdown .7s var(--ease) both;
+    }
+    nav.s { box-shadow: 0 4px 40px rgba(0,0,0,.5); }
+    @keyframes navdown { from{transform:translateY(-110%);opacity:0} to{transform:translateY(0);opacity:1} }
+
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.38rem; font-weight: 700;
+      color: var(--white); letter-spacing: .4px;
+      z-index: 202;
+    }
+    .logo-ico {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--teal), var(--sky));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+      box-shadow: 0 2px 14px rgba(13,148,136,.4);
+    }
+
+    .links { 
+      display: flex; align-items: center; gap: 4px; list-style: none;
+    }
+    .links a {
+      color: rgba(255,255,255,.65); text-decoration: none;
+      font-size: .875rem; font-weight: 500;
+      padding: 7px 14px; border-radius: 7px;
+      position: relative; transition: color .3s;
+    }
+    .links a::after {
+      content: ''; position: absolute; bottom: 4px; left: 50%; right: 50%;
+      height: 2px; background: linear-gradient(90deg,var(--teal),var(--sky));
+      border-radius: 2px; transition: left .3s, right .3s;
+    }
+    .links a:hover { color: var(--white); }
+    .links a:hover::after { left: 14px; right: 14px; }
+    .links a.active { color: var(--aqua); }
+    .links a.active::after { left: 14px; right: 14px; background: var(--aqua); }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: none;
+      padding: 8px;
+      z-index: 202;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle span {
+      width: 24px;
+      height: 2px;
+      background: rgba(255,255,255,.7);
+      border-radius: 2px;
+      transition: all .3s var(--ease);
+      display: block;
+    }
+
+    .menu-toggle:hover span {
+      background: var(--white);
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: rotate(45deg) translateY(11px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg) translateY(-11px);
+    }
+
+    .mobile-menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8,19,32,.95);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s var(--ease);
+      z-index: 199;
+    }
+
+    .mobile-menu-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 68px;
+      left: 0;
+      right: 0;
+      background: rgba(8,19,32,.98);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--glass-bdr);
+      max-height: calc(100vh - 68px);
+      overflow-y: auto;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: transform .3s var(--ease), opacity .3s var(--ease);
+      z-index: 201;
+      padding: 20px 0;
+    }
+
+    .mobile-menu.open {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mobile-menu .links {
+      flex-direction: column;
+      gap: 0;
+      align-items: flex-start;
+      width: 100%;
+      padding: 0;
+    }
+
+    .mobile-menu .links li {
+      width: 100%;
+    }
+
+    .mobile-menu .links a {
+      display: block;
+      padding: 14px 6%;
+      border-radius: 0;
+      border-left: 3px solid transparent;
+      transition: all .2s;
+    }
+
+    .mobile-menu .links a::after {
+      display: none;
+    }
+
+    .mobile-menu .links a:hover {
+      background: rgba(255,255,255,.05);
+      border-left-color: var(--teal);
+      padding-left: calc(6% + 8px);
+    }
+
+    .mobile-menu .links a.active {
+      background: rgba(13,148,136,.15);
+      border-left-color: var(--aqua);
+      color: var(--aqua);
+      padding-left: calc(6% + 8px);
+    }
+
+    main {
+      position: relative; z-index: 1;
+      padding: 108px 5% 90px;
+      max-width: 1400px; margin: 0 auto;
+    }
+
+    .page-hdr {
+      text-align: center; margin-bottom: 56px;
+      animation: fsu .85s var(--ease) both;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .76rem; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--teal-lt);
+      background: rgba(13,148,136,.1); border: 1px solid rgba(13,148,136,.22);
+      padding: 6px 16px; border-radius: 20px; margin-bottom: 20px;
+    }
+    .eyebrow::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal-lt); animation: blink 2.2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.55)} }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem,6vw,4.4rem); font-weight: 700; line-height: 1.08;
+      background: linear-gradient(130deg,#fff 25%,var(--aqua) 65%,var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 14px;
+    }
+    .sub {
+      font-size: 1.02rem; font-weight: 300; color: var(--muted);
+      max-width: 520px; margin: 0 auto; line-height: 1.75;
+    }
+
+    .divider { display: block; margin: 26px auto 0; animation: fi 1.2s ease .5s both; }
+    @keyframes fi { from{opacity:0} to{opacity:1} }
+
+    .filter-bar {
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 10px;
+      margin-bottom: 48px;
+      animation: fsu .85s var(--ease) .18s both;
+    }
+    .ftab {
+      padding: 9px 22px; border-radius: 10px;
+      border: 1.5px solid var(--glass-bdr);
+      background: var(--glass);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: .84rem; font-weight: 500;
+      cursor: none;
+      transition: background .25s, border-color .25s, color .25s, transform .2s, box-shadow .25s;
+    }
+    .ftab:hover { color: var(--white); border-color: rgba(255,255,255,.22); transform: translateY(-1px); }
+    .ftab.active {
+      background: linear-gradient(135deg, var(--teal), var(--blue));
+      border-color: transparent; color: #fff;
+      box-shadow: 0 4px 18px rgba(13,148,136,.32);
+    }
+
+    .stats-row {
+      display: flex; align-items: center; justify-content: center; gap: 36px;
+      margin-bottom: 48px; flex-wrap: wrap;
+      animation: fsu .85s var(--ease) .25s both;
+    }
+    .stat-chip {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; border-radius: 30px;
+      background: var(--glass); border: 1px solid var(--glass-bdr);
+    }
+    .stat-chip-val { font-size: 1.05rem; font-weight: 700; color: var(--aqua); }
+    .stat-chip-lbl { font-size: .78rem; font-weight: 500; color: var(--muted); }
+
+    .masonry {
+      columns: 4 280px;
+      column-gap: 20px;
+    }
+
+    .gitem {
+      break-inside: avoid;
+      margin-bottom: 20px;
+      border-radius: 16px; overflow: hidden;
+      position: relative; cursor: none;
+      border: 1px solid var(--glass-bdr);
+      box-shadow: 0 6px 28px rgba(5,15,35,.45);
+      opacity: 0; transform: translateY(36px);
+      transition: opacity .5s var(--ease), transform .5s var(--ease),
+                  box-shadow .4s, border-color .4s;
+    }
+    .gitem.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .gitem.hidden-filter {
+      opacity: 0 !important; pointer-events: none;
+      transform: scale(.95) !important;
+    }
+
+    .gitem:hover {
+      box-shadow: 0 18px 55px rgba(5,15,35,.7), 0 0 0 1px rgba(103,232,249,.2);
+      border-color: rgba(103,232,249,.25);
+    }
+
+    .gitem img {
+      display: block; width: 100%; height: auto;
+      transition: transform .65s var(--ease), filter .4s;
+      filter: brightness(.86) saturate(.88);
+    }
+    .gitem:hover img {
+      transform: scale(1.06);
+      filter: brightness(.98) saturate(1.15);
+    }
+
+    .goverlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,19,32,.92) 0%, rgba(8,19,32,.35) 55%, transparent 100%);
+      opacity: 0;
+      transition: opacity .4s;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 22px 20px 18px;
+    }
+    .gitem:hover .goverlay { opacity: 1; }
+
+    .gstrip {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 28px 18px 14px;
+      background: linear-gradient(to top, rgba(8,19,32,.88) 0%, transparent 100%);
+      transition: opacity .4s;
+    }
+    .gitem:hover .gstrip { opacity: 0; }
+
+    .g-cat-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 16px;
+      font-size: .66rem; font-weight: 600; letter-spacing: 1.3px; text-transform: uppercase;
+      backdrop-filter: blur(10px); margin-bottom: 6px;
+    }
+    .g-cat-pill::before { content:''; width:5px; height:5px; border-radius:50%; }
+    .cat-longest { background:rgba(56,189,248,.18);color:#67e8f9;border:1px solid rgba(56,189,248,.28); }
+    .cat-longest::before { background:#38bdf8; }
+    .cat-tallest { background:rgba(167,139,250,.18);color:#c4b5fd;border:1px solid rgba(167,139,250,.28); }
+    .cat-tallest::before { background:#a78bfa; }
+    .cat-highest { background:rgba(251,146,60,.18);color:#fdba74;border:1px solid rgba(251,146,60,.28); }
+    .cat-highest::before { background:#fb923c; }
+    .cat-oldest  { background:rgba(251,191,36,.18);color:#fde68a;border:1px solid rgba(251,191,36,.28); }
+    .cat-oldest::before  { background:#fbbf24; }
+    .cat-iconic  { background:rgba(52,211,153,.18);color:#6ee7b7;border:1px solid rgba(52,211,153,.28); }
+    .cat-iconic::before  { background:#34d399; }
+
+    .g-name {
+      font-family: 'Playfair Display', serif;
+      font-size: .95rem; font-weight: 600; color: var(--white);
+      line-height: 1.25;
+    }
+    .g-loc {
+      font-size: .72rem; font-weight: 400; color: rgba(255,255,255,.55);
+      margin-top: 3px;
+    }
+
+    .gov-pill { margin-bottom: 8px; }
+    .gov-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-weight: 700; color: var(--white);
+      margin-bottom: 4px; line-height: 1.2;
+    }
+    .gov-loc {
+      font-size: .75rem; color: rgba(255,255,255,.6); margin-bottom: 10px;
+    }
+    .gov-desc {
+      font-size: .78rem; font-weight: 300; color: rgba(255,255,255,.7);
+      line-height: 1.6; margin-bottom: 12px;
+    }
+    .gov-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .74rem; font-weight: 600; color: var(--aqua); letter-spacing: .4px;
+      transition: gap .2s;
+    }
+    .gitem:hover .gov-btn { gap: 9px; }
+
+    .g-zoom {
+      position: absolute; top: 12px; right: 12px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(8,19,32,.65);
+      border: 1px solid rgba(255,255,255,.15);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.8); font-size: .85rem;
+      backdrop-filter: blur(8px);
+      opacity: 0; transform: scale(.7);
+      transition: opacity .3s, transform .3s;
+    }
+    .gitem:hover .g-zoom { opacity: 1; transform: scale(1); }
+
+    .gitem.wide { break-before: column; }
+
+    .lb-backdrop {
+      position: fixed; inset: 0; z-index: 800;
+      background: rgba(4,10,20,.95);
+      backdrop-filter: blur(16px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .35s;
+    }
+    .lb-backdrop.open { opacity: 1; pointer-events: all; }
+
+    .lb-container {
+      position: relative;
+      max-width: 1060px; width: 100%;
+      transform: scale(.94);
+      transition: transform .4s var(--ease);
+    }
+    .lb-backdrop.open .lb-container { transform: scale(1); }
+
+    .lb-img-wrap {
+      border-radius: 18px; overflow: hidden;
+      border: 1px solid var(--glass-bdr);
+      box-shadow: 0 40px 100px rgba(0,0,0,.7);
+      position: relative;
+      max-height: 72vh;
+    }
+    .lb-img-wrap img {
+      display: block; width: 100%; height: auto;
+      max-height: 72vh; object-fit: cover;
+    }
+
+    .lb-img-wrap::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 45%;
+      background: linear-gradient(to top, rgba(8,19,32,.9), transparent);
+    }
+
+    .lb-info {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      padding: 28px 32px;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+    }
+    .lb-text {padding:10px;}
+    .lb-pill { margin-bottom: 8px; }
+    .lb-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem,2.5vw,1.9rem); font-weight: 700;
+      color: var(--white); margin-bottom: 4px; line-height: 1.15;
+    }
+    .lb-loc { font-size: .82rem; color: rgba(255,255,255,.6); }
+    .lb-desc-wrap { max-width: 380px; }
+    .lb-desc {
+      font-size: .84rem; font-weight: 300; color: rgba(255,255,255,.65);
+      line-height: 1.65;
+    }
+
+    .lb-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 46px; height: 46px; border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.8); font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: none;
+      backdrop-filter: blur(10px);
+      transition: background .25s, color .25s, transform .25s;
+      z-index: 10;
+    }
+    .lb-arrow:hover { background: var(--teal); color: #fff; }
+    .lb-prev { left: -58px; }
+    .lb-next { right: -58px; }
+    .lb-prev:hover { transform: translateY(-50%) translateX(-2px); }
+    .lb-next:hover { transform: translateY(-50%) translateX(2px); }
+
+    @media(max-width:780px) {
+      .lb-prev { left: 8px; }
+      .lb-next { right: 8px; }
+      .lb-info { flex-direction: column; }
+      .lb-desc-wrap { max-width: 100%; }
+    }
+
+    .lb-close {
+      position: absolute; top: -50px; right: 0;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(255,255,255,.8); font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: none;
+      transition: background .25s, color .25s;
+    }
+    .lb-close:hover { background: rgba(255,255,255,.2); color: #fff; }
+
+    .lb-counter {
+      text-align: center; margin-top: 18px;
+      font-size: .78rem; color: rgba(255,255,255,.4); letter-spacing: 1px;
+    }
+
+    .lb-dots {
+      display: flex; align-items: center; justify-content: center;
+      gap: 7px; margin-top: 14px;
+    }
+    .lb-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      transition: background .3s, transform .3s;
+      cursor: none;
+    }
+    .lb-dot.active { background: var(--aqua); transform: scale(1.4); }
+
+    .empty {
+      display: none; text-align: center;
+      padding: 70px 20px;
+    }
+    .empty.show { display: block; }
+    .empty-icon { font-size: 3rem; margin-bottom: 14px; }
+    .empty-title { font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:7px; }
+    .empty-text  { font-size:.88rem; color:var(--muted); }
+
+    .foot {
+      margin-top: 72px; text-align: center;
+      font-size: .76rem; color: rgba(255,255,255,.22);
+      animation: fi 1s ease .9s both;
+    }
+
+    @keyframes fsu { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #08192f; }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+    @media(max-width:1024px) {
+      nav { padding: 0 5%; }
+      .logo { font-size: 1.2rem; }
+      .links a { padding: 6px 12px; font-size: .8rem; }
+      .masonry { columns: 3 220px; }
+    }
+
+    @media(max-width:768px) {
+      nav { padding: 0 4%; }
+      .logo { font-size: 1.1rem; }
+      .menu-toggle {
+        display: flex;
+      }
+      .links {
+        display: none;
+      }
+      .mobile-menu {
+        display: flex;
+      }
+      .masonry { columns: 3 160px; }
+      .stat-chip { padding: 8px 16px; }
+      .stat-chip-val { font-size: .95rem; }
+      .stat-chip-lbl { font-size: .7rem; }
+    }
+
+    @media(max-width:640px) {
+      nav { 
+        padding: 0 4%; 
+        height: 60px;
+      }
+      .logo { font-size: 1rem; gap: 6px; }
+      .logo-ico { width: 28px; height: 28px; font-size: .8rem; }
+      .menu-toggle {
+        padding: 6px;
+      }
+      .menu-toggle span {
+        width: 20px;
+        height: 2px;
+      }
+      main { padding: 100px 4% 60px; }
+      .page-hdr { margin-bottom: 40px; }
+      .eyebrow { font-size: .7rem; padding: 5px 12px; }
+      h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 10px; }
+      .sub { font-size: .95rem; }
+      .filter-bar { gap: 8px; margin-bottom: 36px; }
+      .ftab { padding: 8px 16px; font-size: .78rem; }
+      .stats-row { gap: 16px; margin-bottom: 36px; }
+      .stat-chip { padding: 8px 14px; gap: 8px; }
+      .stat-chip-val { font-size: .9rem; }
+      .stat-chip-lbl { font-size: .65rem; }
+      .masonry { columns: 2 120px; column-gap: 10px; }
+      .masonry .gitem { margin-bottom: 10px; }
+      .gitem img { filter: brightness(.8) saturate(.85); }
+      .gstrip { padding: 20px 14px 10px; }
+      .g-cat-pill { font-size: .6rem; padding: 3px 8px; }
+      .g-name { font-size: .85rem; }
+      .g-loc { font-size: .65rem; }
+      .foot { font-size: .7rem; margin-top: 50px; }
+      .lb-info { padding: 20px 20px; }
+      .lb-name { font-size: 1.2rem; }
+      .lb-arrow { width: 40px; height: 40px; }
+      .lb-prev { left: 6px; }
+      .lb-next { right: 6px; }
+    }
+
+    @media(max-width:480px) {
+      nav { height: 56px; padding: 0 3%; }
+      .logo { font-size: .95rem; }
+      .logo-ico { width: 24px; height: 24px; }
+      main { padding: 90px 3% 50px; }
+      h1 { font-size: clamp(1.6rem, 5vw, 2.5rem); }
+      .sub { font-size: .9rem; line-height: 1.6; }
+      .filter-bar { gap: 6px; margin-bottom: 28px; }
+      .ftab { padding: 7px 12px; font-size: .72rem; }
+      .masonry { columns: 1; }
+      .masonry .gitem { margin-bottom: 12px; }
+      .divider { width: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cdot"></div>
+  <div id="cring"></div>
+
+  <div class="bg">
+    <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+    <div class="grid-ov"></div>
+  </div>
+
+  <nav id="nav">
+    <a href="./index.html" class="logo">
+      BridgeScape
+    </a>
+    
+    <ul class="links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./Bridges.html">Bridges</a></li>
+      <li><a href="./Gallery.html" class="active">Gallery</a></li>
+      <li><a href="./Feedback.html">Feedback</a></li>
+      <li><a href="./Contact.html">Contact</a></li>
+    </ul>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul class="links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./Categories.html">Categories</a></li>
+      <li><a href="./Bridges.html">Bridges</a></li>
+      <li><a href="./Gallery.html" class="active">Gallery</a></li>
+      <li><a href="./Feedback.html">Feedback</a></li>
+      <li><a href="./Contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <div class="lb-backdrop" id="lbBackdrop">
+    <div class="lb-container">
+      <button class="lb-close" id="lbClose">✕</button>
+      <div class="lb-img-wrap">
+        <img id="lbImg" src="" alt=""/>
+        <div class="lb-info">
+          <div class="lb-text">
+            <div class="lb-pill" id="lbPill"></div>
+            <div class="lb-name" id="lbName"></div>
+            <div class="lb-loc" id="lbLoc"></div>
+          </div>
+          <div class="lb-desc-wrap">
+            <div class="lb-desc" id="lbDesc"></div>
+          </div>
+        </div>
+      </div>
+      <button class="lb-arrow lb-prev" id="lbPrev">←</button>
+      <button class="lb-arrow lb-next" id="lbNext">→</button>
+      <div class="lb-counter" id="lbCounter"></div>
+      <div class="lb-dots" id="lbDots"></div>
+    </div>
+  </div>
+
+  <main>
+
+    <header class="page-hdr">
+      <div class="eyebrow">Visual Atlas of Iconic Bridges</div>
+      <h1>Gallery</h1>
+      <p class="sub">An immersive showcase of humanity's most breathtaking bridges — spanning engineering mastery, cultural legacy, and architectural beauty.</p>
+
+      <svg class="divider" width="260" height="34" viewBox="0 0 260 34" fill="none">
+        <path d="M0 30 Q65 5 130 30 Q195 5 260 30" stroke="url(#g)" stroke-width="1.5" fill="none"/>
+        <line x1="25"  y1="30" x2="25"  y2="20" stroke="url(#g)" stroke-width="1" opacity=".5"/>
+        <line x1="65"  y1="30" x2="65"  y2="10" stroke="url(#g)" stroke-width="1" opacity=".5"/>
+        <line x1="105" y1="30" x2="105" y2="20" stroke="url(#g)" stroke-width="1" opacity=".5"/>
+        <line x1="130" y1="30" x2="130" y2="4"  stroke="url(#g)" stroke-width="1" opacity=".5"/>
+        <line x1="155" y1="30" x2="155" y2="20" stroke="url(#g)" stroke-width="1" opacity=".5"/>
+        <line x1="195" y1="30" x2="195" y2="10" stroke="url(#g)" stroke-width="1" opacity=".5"/>
+        <line x1="235" y1="30" x2="235" y2="20" stroke="url(#g)" stroke-width="1" opacity=".5"/>
+        <line x1="0"   y1="30" x2="260" y2="30" stroke="url(#g)" stroke-width="1.5"/>
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="260" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="28%" stop-color="#0d9488"/>
+            <stop offset="72%" stop-color="#38bdf8"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </header>
+
+    <div class="stats-row">
+      <div class="stat-chip"><span class="stat-chip-val">24</span><span class="stat-chip-lbl">Photographs</span></div>
+      <div class="stat-chip"><span class="stat-chip-val">12</span><span class="stat-chip-lbl">Countries</span></div>
+      <div class="stat-chip"><span class="stat-chip-val">5</span><span class="stat-chip-lbl">Categories</span></div>
+      <div class="stat-chip"><span class="stat-chip-val">5,000+</span><span class="stat-chip-lbl">Years of History</span></div>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+      <button class="ftab active" data-cat="all">All Photos</button>
+      <button class="ftab" data-cat="longest">🛣️ Longest</button>
+      <button class="ftab" data-cat="tallest">🏔️ Tallest</button>
+      <button class="ftab" data-cat="highest">⛰️ Highest</button>
+      <button class="ftab" data-cat="oldest">🏛️ Oldest</button>
+      <button class="ftab" data-cat="iconic">✨ Iconic</button>
+    </div>
+
+    <div class="masonry" id="masonry"></div>
+    <div class="empty" id="emptyState">
+      <div class="empty-icon">🖼️</div>
+      <div class="empty-title">No images found</div>
+      <p class="empty-text">Try selecting a different category.</p>
+    </div>
+
+    <div class="foot">&copy; 2024 BridgeScape &nbsp;·&nbsp; An Academic eProject &nbsp;·&nbsp; Crafted with curiosity &amp; code</div>
+  </main>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu a');
+
+    function toggleMenu() {
+      menuToggle.classList.toggle('active');
+      mobileMenu.classList.toggle('open');
+      mobileMenuOverlay.classList.toggle('open');
+    }
+
+    function closeMenu() {
+      menuToggle.classList.remove('active');
+      mobileMenu.classList.remove('open');
+      mobileMenuOverlay.classList.remove('open');
+    }
+
+    menuToggle.addEventListener('click', toggleMenu);
+    mobileMenuOverlay.addEventListener('click', closeMenu);
+
+    mobileMenuLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        closeMenu();
+      }
+    });
+
+    const ITEMS = [
+      {
+        id:1, cat:'longest',
+        name:'Danyang-Kunshan Grand Bridge', loc:'Jiangsu, China',
+        img:'https://images.unsplash.com/photo-1707697686797-888124a68c01?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        desc:"The world's longest bridge at 164.8 km, crossing lakes and paddy fields as part of China's high-speed rail network."
+      },
+      {
+        id:2, cat:'tallest',
+        name:'Millau Viaduct', loc:'Aveyron, France',
+        img:'https://arquitecturaviva.com/assets/uploads/obras/40007/av_imagen_vertical.webp?h=4dd2c306',
+        desc:'Its tallest pylon soars 343 m — briefly taller than the Eiffel Tower — making it the most beautiful bridge on Earth.'
+      },
+      {
+        id:3, cat:'iconic',
+        name:'Golden Gate Bridge', loc:'San Francisco, USA',
+        img:'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1200&auto=format&fit=crop&q=85',
+        desc:'An enduring Art Deco icon, draped in International Orange paint that pierces the Pacific fog with elegance.'
+      },
+      {
+        id:4, cat:'highest',
+        name:'Beipanjiang Bridge', loc:'Guizhou, China',
+        img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTKgkSgUJYF3x23kVlC2MOS5aTFbblLhUhQQ&s',
+        desc:"The world's highest bridge, rising 565 m above the Beipan River gorge — taller than the Empire State Building."
+      },
+      {
+        id:5, cat:'iconic',
+        name:'Tower Bridge', loc:'London, UK',
+        img:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&auto=format&fit=crop&q=85',
+        desc:'Londons beloved bascule bridge, its Gothic towers mirrored in the Thames since 1894.'
+      },
+      {
+        id:6, cat:'oldest',
+        name:'Pont du Gard', loc:'Gard, France',
+        img:'https://cdn.iris-etourism.io/uploads/uzes_pont_du_gard/26e/67-50-9122371.webp',
+        desc:'A Roman aqueduct built c.40 AD without mortar, rising 49 m and stretching 275 m across the Gardon River.'
+      },
+      {
+        id:7, cat:'iconic',
+        name:'Sydney Harbour Bridge', loc:'New South Wales, Australia',
+        img:'https://images.unsplash.com/photo-1599617491715-6a27ca6f1b15?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        desc:'The Coathanger of Sydney — a steel arch spanning 503 m across one of the world\'s most spectacular harbours.'
+      },
+      {
+        id:8, cat:'highest',
+        name:'Zhangjiajie Glass Bridge', loc:'Hunan, China',
+        img:'https://images.unsplash.com/photo-1661558129210-70184a92710e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        desc:'Suspended 300 m above a canyon on 99 transparent glass panels — the world\'s highest glass-bottomed bridge.'
+      },
+      {
+        id:9, cat:'oldest',
+        name:'Ponte Vecchio', loc:'Florence, Italy',
+        img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeuS4WSSH3BumdIWm7paq4Iwitetg55c9yIQ&s',
+        desc:'Europe\'s oldest closed-spandrel arch bridge, lined with medieval jewellers\' shops since 1345.'
+      },
+      {
+        id:10, cat:'tallest',
+        name:'Akashi Kaikyō Bridge', loc:'Hyōgo, Japan',
+        img:'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/7d/c3/58/img-20181124-202338-101.jpg?w=1200&h=-1&s=1',
+        desc:'The Pearl Bridge of Japan holds the world\'s longest central suspension span at 1,991 m.'
+      },
+      {
+        id:11, cat:'iconic',
+        name:'Brooklyn Bridge', loc:'New York, USA',
+        img:'https://images.unsplash.com/photo-1522083165195-3424ed129620?w=1200&auto=format&fit=crop&q=85',
+        desc:'A Gothic-arched marvel of wire rope engineering, connecting Manhattan and Brooklyn since 1883.'
+      },
+      {
+        id:12, cat:'highest',
+        name:'Sidu River Bridge', loc:'Hubei, China',
+        img:'https://pbs.twimg.com/media/F0-0JZBaQAYDhk5.jpg',
+        desc:'Cables fired across the gorge by rocket — the Sidu rises 496 m above its river and transformed remote China.'
+      },
+      {
+        id:13, cat:'iconic',
+        name:'Charles Bridge', loc:'Prague, Czech Republic',
+        img:'https://www.amazingczechia.com/wp-content/uploads/2018/07/charles-bridge-prague-09-summer.jpg',
+        desc:'A 14th-century stone bridge adorned with 30 Baroque statues, crossing the Vltava at the heart of Prague.'
+      },
+      {
+        id:14, cat:'longest',
+        name:'Manchac Swamp Bridge', loc:'Louisiana, USA',
+        img:'https://images.unsplash.com/photo-1608237963573-ba0790bc6404?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        desc:'A haunting 36 km concrete trestle that threads through a cypress swamp south of Lake Pontchartrain.'
+      },
+      {
+        id:15, cat:'oldest',
+        name:'Pont Saint-Bénézet', loc:'Avignon, France',
+        img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/%22Sur_le_Pont_d%27Avignon_on_y_danse%22_is_the_famous_song%2C_but_now_we_see_only_many_tourist_just_standing_there_-_panoramio.jpg/330px-%22Sur_le_Pont_d%27Avignon_on_y_danse%22_is_the_famous_song%2C_but_now_we_see_only_many_tourist_just_standing_there_-_panoramio.jpg',
+        desc:'Medieval Avignon\'s iconic broken bridge — only four of its original 22 arches survive from the 12th century.'
+      },
+      {
+        id:16, cat:'iconic',
+        name:'Rialto Bridge', loc:'Venice, Italy',
+        img:'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1200&auto=format&fit=crop&q=85',
+        desc:'The oldest and most celebrated of four bridges spanning the Grand Canal, completed in 1591 in white Istrian stone.'
+      },
+      {
+        id:17, cat:'tallest',
+        name:'Sutong Bridge', loc:'Jiangsu, China',
+        img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJci6IdeNbUFWkz_TCbx9TMj_GA637fn35gw&s',
+        desc:'A cable-stayed titan crossing the Yangtze with towers rising 306 m — one of the longest cable-stayed spans on Earth.'
+      },
+      {
+        id:18, cat:'iconic',
+        name:'Bosphorus Bridge', loc:'Istanbul, Turkey',
+        img:'https://www.colorkinetics.com/content/dam/color-kinetics/showcases/bosphorus-bridge/bosphorus-bridge1_lg.jpg',
+        desc:'The 15 July Martyrs Bridge links two continents — Europe and Asia — suspended over the legendary Bosphorus Strait.'
+      },
+      {
+        id:19, cat:'highest',
+        name:'Royal Gorge Bridge', loc:'Colorado, USA',
+        img:'https://www.fineartstorehouse.com/p/629/royal-gorge-bridge-43405724.jpg.webp',
+        desc:'Hanging 291 m above the Arkansas River, it was the world\'s highest suspension bridge for over 70 years.'
+      },
+      {
+        id:20, cat:'oldest',
+        name:'Iron Bridge', loc:'Shropshire, England',
+        img:'https://www.shropshire-guide.co.uk/wp-content/uploads/2015/03/4119_v119-3-DSC_6221-lr.jpg',
+        desc:'The world\'s first cast-iron arch bridge, built in 1779 and a UNESCO World Heritage Site — birthplace of the Industrial Revolution.'
+      },
+      {
+        id:21, cat:'iconic',
+        name:'Ha\'penny Bridge', loc:'Dublin, Ireland',
+        img:'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/15/2d/2f/img-20181017-173030-largejpg.jpg?w=900&h=500&s=1',
+        desc:'Dublin\'s beloved cast-iron pedestrian bridge crossing the Liffey — its graceful arch a timeless symbol of the city since 1816.'
+      },
+      {
+        id:22, cat:'tallest',
+        name:'Russky Bridge', loc:'Vladivostok, Russia',
+        img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMXlrrZIgcCzbvd5Gob0xT3ffyVQoHIdTl6A&s',
+        desc:'The world\'s longest cable-stayed bridge span at 1,104 m, connecting the Russian mainland to Russky Island above the Eastern Bosphorus.'
+      },
+      {
+        id:23, cat:'longest',
+        name:'Lake Pontchartrain Causeway', loc:'Louisiana, USA',
+        img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMXlrrZIgcCzbvd5Gob0xT3ffyVQoHIdTl6A&s',
+        desc:'At 38.6 km, the causeway crosses Lake Pontchartrain so far that curvature of the Earth makes either shore invisible from the middle.'
+      },
+      {
+        id:24, cat:'highest',
+        name:'Trift Bridge', loc:'Gadmen, Switzerland',
+        img:'https://www.deseret.com/resizer/v2/NATJOUCCXGYUJ6RLT7C6HQIN3E.jpg?auth=7b7b4b56bffe73ef8616bf5edc2e030bac586ef9f03fa9adcf7c0743193d14e1&focal=300%2C200&width=800&height=533',
+        desc:'A breathtaking pedestrian suspension bridge stretching 170 m across a glacial gorge in the Swiss Alps at 2,200 m elevation.'
+      }
+    ];
+
+    const cdot = document.getElementById('cdot'), cring = document.getElementById('cring');
+    let mx=0, my=0, rx=0, ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cdot.style.left=mx+'px'; cdot.style.top=my+'px'; });
+    (function loop(){ rx+=(mx-rx)*.12; ry+=(my-ry)*.12; cring.style.left=rx+'px'; cring.style.top=ry+'px'; requestAnimationFrame(loop); })();
+    function addHover(els){ els.forEach(el=>{ el.addEventListener('mouseenter',()=>document.body.classList.add('hov')); el.addEventListener('mouseleave',()=>document.body.classList.remove('hov')); }); }
+    addHover(document.querySelectorAll('a, button'));
+    document.addEventListener('mousedown',()=>document.body.classList.add('clk'));
+    document.addEventListener('mouseup',  ()=>document.body.classList.remove('clk'));
+
+    window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('s', scrollY > 8));
+
+    function catLabel(c){ return c.charAt(0).toUpperCase()+c.slice(1); }
+    function catClass(c){ return 'cat-'+c; }
+
+    const masonry = document.getElementById('masonry');
+
+    function buildGallery(items){
+      masonry.innerHTML = '';
+      items.forEach((item, i) => {
+        const el = document.createElement('div');
+        el.className = 'gitem';
+        el.dataset.cat = item.cat;
+        el.dataset.idx = i;
+        el.dataset.delay = i * 55;
+        el.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" loading="lazy"/>
+          <div class="gstrip">
+            <span class="g-cat-pill ${catClass(item.cat)}">${catLabel(item.cat)}</span>
+            <div class="g-name">${item.name}</div>
+            <div class="g-loc">${item.loc}</div>
+          </div>
+          <div class="goverlay">
+            <span class="gov-pill g-cat-pill ${catClass(item.cat)}">${catLabel(item.cat)}</span>
+            <div class="gov-name">${item.name}</div>
+            <div class="gov-loc">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${item.loc}
+            </div>
+            <div class="gov-desc">${item.desc}</div>
+            <div class="gov-btn">
+              View Full Image
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </div>
+          <div class="g-zoom">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>`;
+        el.addEventListener('click', () => openLightbox(items, i));
+        masonry.appendChild(el);
+      });
+
+      addHover(masonry.querySelectorAll('.gitem'));
+      setTimeout(revealItems, 100);
+    }
+
+    function revealItems(){
+      document.querySelectorAll('.gitem').forEach(el => {
+        if(el.classList.contains('hidden-filter')) return;
+        const r = el.getBoundingClientRect();
+        if(r.top < window.innerHeight - 40 && !el.classList.contains('visible')){
+          setTimeout(() => el.classList.add('visible'), parseInt(el.dataset.delay||0));
+        }
+      });
+    }
+    window.addEventListener('scroll', revealItems, { passive:true });
+
+    let currentCat = 'all';
+    let activeItems = [...ITEMS];
+
+    document.getElementById('filterBar').addEventListener('click', e => {
+      const btn = e.target.closest('.ftab');
+      if(!btn) return;
+      document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+
+      activeItems = currentCat === 'all' ? [...ITEMS] : ITEMS.filter(i => i.cat === currentCat);
+      document.getElementById('emptyState').classList.toggle('show', activeItems.length === 0);
+      buildGallery(activeItems);
+    });
+
+    buildGallery(ITEMS);
+
+    const lbBackdrop = document.getElementById('lbBackdrop');
+    let lbItems = [], lbIdx = 0;
+
+    function openLightbox(items, idx){
+      lbItems = items;
+      setLbSlide(idx);
+      lbBackdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      buildDots();
+      closeMenu();
+    }
+
+    function closeLightbox(){
+      lbBackdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function setLbSlide(idx){
+      lbIdx = ((idx % lbItems.length) + lbItems.length) % lbItems.length;
+      const item = lbItems[lbIdx];
+
+      const img = document.getElementById('lbImg');
+      img.style.opacity = '0';
+      img.src = item.img;
+      img.alt = item.name;
+      img.onload = () => { img.style.transition='opacity .4s'; img.style.opacity='1'; };
+
+      const pill = document.getElementById('lbPill');
+      pill.className = 'lb-pill g-cat-pill '+catClass(item.cat);
+      pill.textContent = catLabel(item.cat);
+
+      document.getElementById('lbName').textContent = item.name;
+      document.getElementById('lbLoc').innerHTML = `
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:5px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        ${item.loc}`;
+      document.getElementById('lbDesc').textContent = item.desc;
+      document.getElementById('lbCounter').textContent = `${lbIdx+1} / ${lbItems.length}`;
+
+      document.querySelectorAll('.lb-dot').forEach((d,i) => d.classList.toggle('active', i===lbIdx));
+    }
+
+    function buildDots(){
+      const dotsEl = document.getElementById('lbDots');
+      dotsEl.innerHTML = '';
+      const maxDots = Math.min(lbItems.length, 12);
+      for(let i=0;i<maxDots;i++){
+        const d = document.createElement('div');
+        d.className = 'lb-dot' + (i===lbIdx?' active':'');
+        d.addEventListener('click', () => setLbSlide(i));
+        dotsEl.appendChild(d);
+      }
+    }
+
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbPrev').addEventListener('click', () => setLbSlide(lbIdx - 1));
+    document.getElementById('lbNext').addEventListener('click', () => setLbSlide(lbIdx + 1));
+    lbBackdrop.addEventListener('click', e => { if(e.target === lbBackdrop) closeLightbox(); });
+
+    document.addEventListener('keydown', e => {
+      if(!lbBackdrop.classList.contains('open')) return;
+      if(e.key === 'Escape')       closeLightbox();
+      if(e.key === 'ArrowLeft')    setLbSlide(lbIdx - 1);
+      if(e.key === 'ArrowRight')   setLbSlide(lbIdx + 1);
+    });
+
+    let tsX = 0;
+    lbBackdrop.addEventListener('touchstart', e => tsX = e.touches[0].clientX, {passive:true});
+    lbBackdrop.addEventListener('touchend',   e => {
+      const dx = e.changedTouches[0].clientX - tsX;
+      if(Math.abs(dx) > 50) setLbSlide(lbIdx + (dx < 0 ? 1 : -1));
+    }, {passive:true});
+
+    addHover(document.querySelectorAll('.lb-close,.lb-prev,.lb-next,.lb-dot,.ftab,.menu-toggle'));
+  </script>
+
+</body>
+</html>
